@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expo-maps",
-    "slug": "expo-maps",
+    "name": "easy-expo",
+    "slug": "easy-expo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -10,6 +10,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "userInterfaceStyle": "automatic",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -17,13 +18,39 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "userInterfaceStyle": "automatic",
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "<YOUR_GMAPS_APII_KEY_HERE>"
+      },
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to let user put a photo in his profile page.",
+
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "The Beep App uses your location to pick origins, destinations, and predict ride times",
+        "NSLocationAlwaysUsageDescription": "The Beep App will use your location to provide ETA's to yourself and others",
+        "NSLocationWhenInUseUsageDescription": "The Beep App will use your location to provide ETA's to yourself and others",
+        "NSLocationUsageDescription": "The Beep App will use your location to provide ETA's to yourself and others",
+        
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
+      },
+      "bundleIdentifier": "easy.developer"
     },
     "android": {
+      "userInterfaceStyle": "automatic",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "config": {
+        "googleMaps" : {
+          "apiKey": "<YOUR_GMAPS_APII_KEY_HERE>"
+        }
+      },
+      "permissions": [ "CAMERA", "WRITE_EXTERNAL_STORAGE", "CAMERA_ROLL" ],
+      "package": "easy.developer"
     },
     "web": {
       "favicon": "./assets/favicon.png"
