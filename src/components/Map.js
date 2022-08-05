@@ -59,6 +59,15 @@ export default function Map(props) {
   return(
     <>
     <MapView
+      customMapStyle={[
+        {
+          featureType: "poi",
+          stylers: [
+            {
+              visibility: "off"
+            }
+          ]
+        }]}
       ref={mapRef}
       showsPointsOfInterest={false}
       style={{
