@@ -1,20 +1,53 @@
 import * as React from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, ScrollView} from 'react-native';
+import { RefreshControl, StyleSheet, SafeAreaView, ScrollView, Pressable} from 'react-native';
+import { Button, Box } from "native-base";
 
 import RowCard from '../components/RowCard';
 import Banner from '../components/Banner';
 import ImageCard from '../components/ImageCard';
-import Button from '../components/Button';
+import RecordButton from '../components/RecordButton';
+import Loading from "../components/Loading";
+import RefreshButton from "../components/RefreshButton";
+
+
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 export default function DemoScreen({ navigation }) {
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    console.log("I was refreshed")
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
   return (
-    <ScrollView>
-      <Banner/>
+      <ScrollView
+        // contentContainerStyle={styles.scrollView}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+      >
+      {/* <Banner/>
       <RowCard/>
-      <ImageCard/>
-      <Button/>
+      <ImageCard/> */}
+      <RefreshButton callback={onRefresh}
+                     label = "Refresh"
+      />
 
     </ScrollView>
-    // </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  scrollView: {
+    backgroundColor: 'pink',
+    paddingBottom: 30
+  },
+});

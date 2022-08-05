@@ -21,7 +21,7 @@
       "userInterfaceStyle": "automatic",
       "supportsTablet": true,
       "config": {
-        "googleMapsApiKey": "<YOUR_GMAPS_APII_KEY_HERE>"
+        "googleMapsApiKey": ""
       },
       "infoPlist": {
         "NSCameraUsageDescription": "This app uses the camera to let user put a photo in his profile page.",
@@ -46,7 +46,7 @@
       },
       "config": {
         "googleMaps" : {
-          "apiKey": "<YOUR_GMAPS_APII_KEY_HERE>"
+          "apiKey": ""
         }
       },
       "permissions": [ "CAMERA", "WRITE_EXTERNAL_STORAGE", "CAMERA_ROLL" ],

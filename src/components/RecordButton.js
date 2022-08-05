@@ -2,7 +2,7 @@ import React, {useState, useEffect } from "react";
 import { Button, useToast, Center,Box  } from "native-base";
 
 
-export default function Example() {
+export default function RecordButton() {
   const toast = useToast();
   const [pressed, setPressed] = useState(false);
 

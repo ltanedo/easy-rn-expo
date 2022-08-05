@@ -32,7 +32,7 @@ export default function Card(props) {
         }}
       >
         <Box>
-          <AspectRatio w="100%" ratio={4/ 3}>
+          <AspectRatio w="100%" ratio={5/ 2}>
             <Image
               source={{
                 uri:
@@ -79,10 +79,10 @@ export default function Card(props) {
               {props.header}
             </Text>
           </Stack>
-          <Text fontWeight="400">
+          {/* <Text fontWeight="400">
             {props.description}
-          </Text>
-          <HStack alignItems="center" space={4} justifyContent="space-between">
+          </Text> */}
+          {/* <HStack alignItems="center" space={4} justifyContent="space-between">
             <HStack alignItems="center">
               <Text
                 color="coolGray.600"
@@ -94,7 +94,7 @@ export default function Card(props) {
                 {props.footer}
               </Text>
             </HStack>
-          </HStack>
+          </HStack> */}
         </Stack>
       </Box>
     </Box>

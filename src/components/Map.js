@@ -1,96 +1,128 @@
-import React from 'react';
-import {View, SafeAreaView, Text} from 'react-native';
-
+import React, { useRef, useState, useEffect } from 'react';
+import {View, StyleSheet,Dimensions,Pressable} from 'react-native';
 import MapView from 'react-native-maps';
-import Button  from './Button';
+import { Marker } from 'react-native-maps';
+import {Button } from 'native-base';
+import RefreshButton from "./RefreshButton";
 
-import RNLocation from 'react-native-location';
-import Geolocation from 'react-native-geolocation-service';
-
-
-export default class Map extends React.PureComponent {
-
-  constructor() {
-      super();
-      this.state = {
-        location: null
-      };
-      console.log('constructor')
-    }
-
-  componentDidMount() {
-    console.log('componentDidMount')
-    RNLocation.requestPermission({
-      ios: "whenInUse",
-      android: {
-        detail: "fine",
-        rationale: {
-          title: "Location permission",
-          message: "We use your location to demo the library",
-          buttonPositive: "OK",
-          buttonNegative: "Cancel"
-        }
-      }
-    }).then(granted => {
-      console.log("granted")
-    });
-
-    Geolocation.getCurrentPosition(
-        (position) => {
-          console.log(position);
-          this.setState({
-            location : position['coords']
-          })
-        },
-        (error) => {
-          // See error code charts below.
-          console.log(error.code, error.message);
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-    );
-  }
-
-
-
-  render() {
-    const { location } = this.state;
-    console.log(location);
-    return(
-    <SafeAreaView style={{ flex: 1 }}>
-        {location != null ?
-          <MapView
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-            }}
-            initialRegion={{
-              latitude: location.latitude,
-              longitude: location.longitude,
-              latitudeDelta: 0.005,
-              longitudeDelta: 0.005,
-            }}
-            showsUserLocation = {true}
-          >
-          <MapView.Marker
-             coordinate={{ latitude : location.latitude , longitude : location.longitude }}
-             title={"Starting"}
-             description={"This is where you started"}/>
-
-          </MapView>
-        : <Text> loading </Text>}
-
-        <View style={{
-                position: 'absolute',//use absolute position to show button on top of the map
-                bottom: '10%', //for center align
-                // justifyContent: 'center',
-                left: '25%'
-        }}>
-            <Button />
-        </View>
-    </SafeAreaView>
-  )
-  }
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
 }
+
+
+export default function Map(props) {
+
+  const mapRef = useRef(null);
+
+  const [mapRegion, setMapRegion] = useState({
+    latitude: props.location.coords.latitude,
+    longitude: props.location.coords.longitude,
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.0121,
+  });
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    // const userRegion = {
+    //   latitude: props.location.coords.latitude,
+    //   longitude: props.location.coords.longitude,
+    //   latitudeDelta: 0.0922,
+    //   longitudeDelta: 0.0421,
+    // };
+    // mapRef.current?.animateToRegion(userRegion,500);
+    
+    camera = {
+      center: {
+          latitude: props.location.coords.latitude,
+          longitude: props.location.coords.longitude
+      },
+      pitch: 0, 
+      heading: 20,
+      altitude: 2000, 
+      zoom: 16
+    }
+    mapRef.current?.animateCamera(camera,{ duration: 500 })
+  }, []);
+
+  useEffect(() => {
+    console.log("use effect called")
+    const userRegion = {
+      latitude: props.location.coords.latitude,
+      longitude: props.location.coords.longitude,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421,
+    };
+
+    mapRef.current?.animateToRegion(userRegion,500);
+  }, []);
+
+  return(
+    <>
+    <MapView
+      ref={mapRef}
+      showsPointsOfInterest={false}
+      style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}
+      // initialRegion={{
+      //   latitude: 40.7506,  //40.7506,
+      //   longitude: -73.9935,  //-73.9935,
+      //   latitudeDelta: 0.005,
+      //   longitudeDelta: 0.005,
+      // }}
+      region={
+        mapRegion
+      }
+
+      showsUserLocation = {true}
+      showsMyLocationButton={true}
+      // provider={MapView.PROVIDER_GOOGLE}
+      >
+         {props.markers.map((marker, index) => (
+            <Marker
+              key={index}
+              coordinate={marker.coords}
+              title={marker.name}
+              description={marker.foods}
+            />
+          ))}
+                 
+    </MapView>
+    <View style={styles.mapFloatTop}>
+      <RefreshButton callback={()=>onRefresh()}></RefreshButton>
+    </View>
+      </>
+    )
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    map: {
+      width: Dimensions.get('window').width,
+      height: Dimensions.get('window').height,
+    },
+    mapFloatTop: {
+      position: 'absolute',
+      top: '0%', 
+      left: '25%' 
+    },
+    mapFloatBottom: {
+      position: 'absolute',
+      bottom: '10%', 
+      left: '25%' 
+    },
+    contentContainer: {
+      flex: 1,
+      // alignItems: 'center',
+    },
+  });
+  
